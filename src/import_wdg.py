@@ -153,20 +153,63 @@ class ImportWidget(QtWidgets.QWidget):
                 goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/PUBLISH'
                 filePath = os.listdir(goodPath)[0]
                 cmds.file( filePath , i=True )
-        cmds.file( 'C:/mystuff/wilma.mb', r=True )
+        else:
+            wip = self.lastWIP.isChecked()
+            if wip == 'True':
+                goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/WIP'
+                filePath = os.listdir(goodPath)
+                ### cambiar a la ultima version , busqueda por ultima modificacion (chapuzero pero funciona)
+                lastModFile = []
+                finalFileName = []
+                for each in filePath:
+                    mTime = os.path.getmtime(each)
+                    lastModFile.append([each, mTime])
+                
+                for eachTime in lastModFile:
+                    timeList.append(eachTime[1])
+                goodfiletime = float(max(timeList))
+                for item in lastModFile:
+                    if goodfiletime in item:
+                        finalFileName.append(item[0])
+                        print(item[0])
+                cmds.file( finalFileName[0] , r=True )
+            else:
+                goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/PUBLISH'
+                filePath = os.listdir(goodPath)[0]
+                cmds.file( filePath, r=True )
+        
         
     
         cmds.file( 'fred.ma', o=True )
     
     def openInThisScene(self):
         importOrReference = self.import_mode.isChecked()
-        if importOrReference == 'True'
-            cmds.file( 'fred.ma', o=True )
-        cmds.file( 'C:/mystuff/wilma.mb', r=True )
         
-    
-        cmds.file( 'fred.ma', o=True )
-     
+        if importOrReference == 'True'
+            wip = self.lastWIP.isChecked()
+            if wip == 'True':
+                goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/WIP'
+                filePath = os.listdir(goodPath)
+                ### cambiar a la ultima version , busqueda por ultima modificacion (chapuzero pero funciona)
+                lastModFile = []
+                finalFileName = []
+                for each in filePath:
+                    mTime = os.path.getmtime(each)
+                    lastModFile.append([each, mTime])
+                
+                for eachTime in lastModFile:
+                    timeList.append(eachTime[1])
+                goodfiletime = float(max(timeList))
+                for item in lastModFile:
+                    if goodfiletime in item:
+                        finalFileName.append(item[0])
+                        print(item[0])
+                cmds.file( finalFileName[0] , o=True )
+            else:
+                goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/PUBLISH'
+                filePath = os.listdir(goodPath)[0]
+                cmds.file( filePath , o=True )
+
     def openInNewScene(self):
         ### WIP 
         print('Abrir otro maya con esa escena o cerrar esta y abrir esa escena')
