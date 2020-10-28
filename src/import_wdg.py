@@ -2,6 +2,7 @@ from PySide2 import QtCore
 from PySide2 import QtGui
 from PySide2 import QtWidgets
 import os
+import maya.cmds as cmds
 
 class ImportWidget(QtWidgets.QWidget):
     
@@ -81,7 +82,7 @@ class ImportWidget(QtWidgets.QWidget):
         
         master_layout.addLayout(main_layout)
         master_layout.addWidget(wip_gb)
-        master_layout.addLWidget(import_gb)
+        master_layout.addWidget(import_gb)
         master_layout.addLayout(buttons_layout)
         
 
@@ -140,7 +141,6 @@ class ImportWidget(QtWidgets.QWidget):
         dep_list_item = self.dep_list_wdg.currentItem().text()
         last_list_item = self.last_list_wdg.currentItem().text()
         
-        
         if importOrReference == 'True':
             wip = self.lastWIP.isChecked()
             if wip == 'True':
@@ -160,11 +160,11 @@ class ImportWidget(QtWidgets.QWidget):
                     if goodfiletime in item:
                         finalFileName.append(item[0])
                         print(item[0])
-                cmds.file( finalFileName[0] , i=True )
+                cmds.file( goodPath + '/' + finalFileName[0] , i=True )
             else:
                 goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/PUBLISH'
-                filePath = os.listdir(goodPath)[0]
-                cmds.file( filePath , i=True )
+                filePath = os.listdir(goodPath)
+                cmds.file( goodPath + '/' + filePath[0] , i=True )
         else:
             wip = self.lastWIP.isChecked()
             if wip == 'True':
@@ -183,17 +183,16 @@ class ImportWidget(QtWidgets.QWidget):
                 for item in lastModFile:
                     if goodfiletime in item:
                         finalFileName.append(item[0])
-                        print(item[0])
-                cmds.file( finalFileName[0] , r=True )
+                        print(goodPath + '/' + item[0])
+                cmds.file( goodPath + '/' + finalFileName[0] , r=True )
             else:
                 goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/PUBLISH'
-                filePath = os.listdir(goodPath)[0]
-                cmds.file( filePath, r=True )
+                
+                filePath = os.listdir(goodPath)
+                cmds.file( goodPath + '/' + filePath[0], r=True )
         
         
-    
-        cmds.file( 'fred.ma', o=True )
-    
+
     def openInThisScene(self):
         importOrReference = self.import_mode.isChecked()
         
@@ -216,11 +215,11 @@ class ImportWidget(QtWidgets.QWidget):
                     if goodfiletime in item:
                         finalFileName.append(item[0])
                         print(item[0])
-                cmds.file( finalFileName[0] , o=True )
+                cmds.file( goodPath + '/' + finalFileName[0] , o=True )
             else:
                 goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/PUBLISH'
-                filePath = os.listdir(goodPath)[0]
-                cmds.file( filePath , o=True )
+                filePath = os.listdir(goodPath)
+                cmds.file( goodPath + '/' + filePath [0], o=True )
 
     def openInNewScene(self):
         ### WIP 
