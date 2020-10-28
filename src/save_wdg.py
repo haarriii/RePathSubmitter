@@ -140,7 +140,19 @@ class SaveWidget(QtWidgets.QWidget):
             self.publish = 'WIP'
         else:
             self.publish = 'PUBLISH'
-        self.goodName = self.assetTypeX + assetName + '_' + self.publish
+        
+        if depType == '01_SCULPT':
+            self.assetDepX = 'sculpt'
+        elif assetType == '02_MODEL':
+            self.assetDepX = 'model'
+        elif assetType == '03_RIG':
+            self.assetDepX = 'rig'
+        elif assetType == '04_TEXTURING':
+            self.assetDepX = 'texturing'
+        elif assetType == '05_LOOKDEV':
+            self.assetDepX = 'lookdev'
+
+        self.goodName = self.assetTypeX + assetName + '_' + assetDepX + '_' + self.publish
         rootPath = r'F:/RePath_Pipe/PROJECT/02_PRODUCTION/'
         self.goodNamedFilePath = rootPath + self.fileTypePath + '/' + assetType + '/' + self.assetTypeX + assetName + '/' + depType + '/' + self.publish
         if not os.path.exists(self.goodNamedFilePath):

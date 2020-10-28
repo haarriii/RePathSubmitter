@@ -3,6 +3,7 @@ from PySide2 import QtGui
 from PySide2 import QtWidgets
 import os
 import maya.cmds as cmds
+from subprocess import Popen
 
 class ImportWidget(QtWidgets.QWidget):
     
@@ -92,7 +93,7 @@ class ImportWidget(QtWidgets.QWidget):
         self.dep_list_wdg.itemClicked.connect(self.update_depList)
         self.importInScene_btn.clicked.connect(self.importInThisScene)
         self.openInMaya_btn.clicked.connect(self.openInNewScene)
-        self.openInScene_btn.clicked.connect(self.openInNewScene)
+        self.openInScene_btn.clicked.connect(self.openInThisScene)
 
     def update_fList(self, item):
         self.type_list_wdg.clear()
@@ -122,7 +123,7 @@ class ImportWidget(QtWidgets.QWidget):
             self.dep_list_wdg.addItem(dep_item)
     
     def update_depList(self, item):
-        
+        self.last_list_wdg.clear()
         file_list_item = self.file_list_wdg.currentItem().text()
         type_list_item = self.type_list_wdg.currentItem().text()
         currentItem = item.text()
@@ -135,22 +136,23 @@ class ImportWidget(QtWidgets.QWidget):
 
     def importInThisScene(self):
         importOrReference = self.import_mode.isChecked()
-        
+        wip_Check = self.lastWIP.isChecked()
+
         file_list_item = self.file_list_wdg.currentItem().text()
         type_list_item = self.type_list_wdg.currentItem().text()
         dep_list_item = self.dep_list_wdg.currentItem().text()
         last_list_item = self.last_list_wdg.currentItem().text()
         
-        if importOrReference == 'True':
-            wip = self.lastWIP.isChecked()
-            if wip == 'True':
+        if importOrReference == True:
+            if wip_Check == True:
                 goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/WIP'
                 filePath = os.listdir(goodPath)
                 ### cambiar a la ultima version , busqueda por ultima modificacion (chapuzero pero funciona)
                 lastModFile = []
                 finalFileName = []
+                timeList =[]
                 for each in filePath:
-                    mTime = os.path.getmtime(each)
+                    mTime = os.path.getmtime(goodPath + '/' + each)
                     lastModFile.append([each, mTime])
                 
                 for eachTime in lastModFile:
@@ -161,20 +163,23 @@ class ImportWidget(QtWidgets.QWidget):
                         finalFileName.append(item[0])
                         print(item[0])
                 cmds.file( goodPath + '/' + finalFileName[0] , i=True )
+                print(goodPath + '/' + finalFileName[0])
             else:
                 goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/PUBLISH'
                 filePath = os.listdir(goodPath)
                 cmds.file( goodPath + '/' + filePath[0] , i=True )
+                print(goodPath + '/' + filePath[0])
         else:
-            wip = self.lastWIP.isChecked()
-            if wip == 'True':
+            if wip_Check == True:
+                print('wip es true')
                 goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/WIP'
                 filePath = os.listdir(goodPath)
                 ### cambiar a la ultima version , busqueda por ultima modificacion (chapuzero pero funciona)
                 lastModFile = []
                 finalFileName = []
+                timeList =[]
                 for each in filePath:
-                    mTime = os.path.getmtime(each)
+                    mTime = os.path.getmtime(goodPath + '/' + each)
                     lastModFile.append([each, mTime])
                 
                 for eachTime in lastModFile:
@@ -184,28 +189,37 @@ class ImportWidget(QtWidgets.QWidget):
                     if goodfiletime in item:
                         finalFileName.append(item[0])
                         print(goodPath + '/' + item[0])
-                cmds.file( goodPath + '/' + finalFileName[0] , r=True )
+                cmds.file( goodPath + '/' + finalFileName[0] , r=True, ns=finalFileName[0] )
+                print(goodPath + '/' + finalFileName[0])
             else:
+                # print('wip es false')
                 goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/PUBLISH'
                 
                 filePath = os.listdir(goodPath)
                 cmds.file( goodPath + '/' + filePath[0], r=True )
-        
+                print(filePath)
         
 
     def openInThisScene(self):
         importOrReference = self.import_mode.isChecked()
+        wip_Check = self.lastWIP.isChecked()
         
-        if importOrReference == 'True':
-            wip = self.lastWIP.isChecked()
-            if wip == 'True':
+        file_list_item = self.file_list_wdg.currentItem().text()
+        type_list_item = self.type_list_wdg.currentItem().text()
+        dep_list_item = self.dep_list_wdg.currentItem().text()
+        last_list_item = self.last_list_wdg.currentItem().text()
+
+
+        if importOrReference == True:
+            if wip_Check == True:
                 goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/WIP'
                 filePath = os.listdir(goodPath)
-                ### cambiar a la ultima version , busqueda por ultima modificacion (chapuzero pero funciona)
+                ### cambiar a la ultima version , busquedal por ultima modificacion (chapuzero pero funciona)
                 lastModFile = []
                 finalFileName = []
+                timeList =[]
                 for each in filePath:
-                    mTime = os.path.getmtime(each)
+                    mTime = os.path.getmtime(goodPath + '/' + each)
                     lastModFile.append([each, mTime])
                 
                 for eachTime in lastModFile:
@@ -215,12 +229,76 @@ class ImportWidget(QtWidgets.QWidget):
                     if goodfiletime in item:
                         finalFileName.append(item[0])
                         print(item[0])
-                cmds.file( goodPath + '/' + finalFileName[0] , o=True )
+                cmds.file( goodPath + '/' + finalFileName[0] , o=True, force=True)
             else:
                 goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/PUBLISH'
                 filePath = os.listdir(goodPath)
-                cmds.file( goodPath + '/' + filePath [0], o=True )
+                cmds.file( goodPath + '/' + filePath [0], o=True, force=True)
+        else:
+            if wip_Check == True:
+                print('wip es true')
+                goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/WIP'
+                filePath = os.listdir(goodPath)
+                ### cambiar a la ultima version , busqueda por ultima modificacion (chapuzero pero funciona)
+                lastModFile = []
+                finalFileName = []
+                timeList =[]
+                for each in filePath:
+                    mTime = os.path.getmtime(goodPath + '/' + each)
+                    lastModFile.append([each, mTime])
+                
+                for eachTime in lastModFile:
+                    timeList.append(eachTime[1])
+                goodfiletime = float(max(timeList))
+                for item in lastModFile:
+                    if goodfiletime in item:
+                        finalFileName.append(item[0])
+                        print(goodPath + '/' + item[0])
+                cmds.file( goodPath + '/' + finalFileName[0] , r=True, ns=finalFileName[0] )
+                print(goodPath + '/' + finalFileName[0])
+            else:
+                goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/PUBLISH'
+                filePath = os.listdir(goodPath)
+                cmds.file(new=True, force=True) 
+                cmds.file( goodPath + '/' + filePath[0], r=True, ns=finalFileName[0])
+                
+            
 
     def openInNewScene(self):
-        ### WIP 
-        print('Abrir otro maya con esa escena o cerrar esta y abrir esa escena')
+        importOrReference = self.import_mode.isChecked()
+        wip_Check = self.lastWIP.isChecked()
+        
+        file_list_item = self.file_list_wdg.currentItem().text()
+        type_list_item = self.type_list_wdg.currentItem().text()
+        dep_list_item = self.dep_list_wdg.currentItem().text()
+        last_list_item = self.last_list_wdg.currentItem().text()
+
+
+        if importOrReference == True:
+            if wip_Check == True:
+                goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/WIP'
+                filePath = os.listdir(goodPath)
+                ### cambiar a la ultima version , busquedal por ultima modificacion (chapuzero pero funciona)
+                lastModFile = []
+                finalFileName = []
+                timeList =[]
+                for each in filePath:
+                    mTime = os.path.getmtime(goodPath + '/' + each)
+                    lastModFile.append([each, mTime])
+                
+                for eachTime in lastModFile:
+                    timeList.append(eachTime[1])
+                goodfiletime = float(max(timeList))
+                for item in lastModFile:
+                    if goodfiletime in item:
+                        finalFileName.append(item[0])
+                        print(item[0])
+                Popen(r"C:\Program Files\Autodesk\Maya2018\bin\maya.exe -file {}".format(goodPath + '/' + finalFileName[0]))
+            else:
+                goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/PUBLISH'
+                filePath = os.listdir(goodPath)
+                Popen(r"C:\Program Files\Autodesk\Maya2018\bin\maya.exe -file {}".format(goodPath + '/' + filePath [0]))
+        else:
+            print("Can't reference in new maya scene, sorry :(")
+
+
