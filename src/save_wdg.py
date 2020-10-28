@@ -8,6 +8,7 @@ import getpass
 
 class SaveWidget(QtWidgets.QWidget):
 
+    __ROOT = 'F:/RePath_Pipe/PROJECT/02_PRODUCTION/'
     def __init__(self, parent=None):
         super(SaveWidget, self).__init__(parent)
         #widgets 
@@ -31,9 +32,9 @@ class SaveWidget(QtWidgets.QWidget):
         
         
         mainType = ['ASSETS', 'SHOTS']
-        fileType = ['CHAR','ELEMS','LOCATION','PROPS', 'VEGETATION']
+        fileType = os.listdir('{}ASSETS'.format(self.__ROOT))
         departmentType = ['01_SCLUPT', '02_MODEL', '03_RIG', '04_TEXTURING', '06_LOOKDEV']
-        shotName = ['SHOT0010', 'SHOT0020', 'SHOT0030']
+        shotName = os.listdir('{}SHOTS'.format(self.__ROOT))
        
 
         self.maintype_cb = QtWidgets.QComboBox()
