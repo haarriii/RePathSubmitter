@@ -29,10 +29,12 @@ class ImportWidget(QtWidgets.QWidget):
 
         self.import_lbl = QtWidgets.QLabel('Import Mode')
         self.import_mode = QtWidgets.QRadioButton('Import')
+        self.import_mode.setChecked(True)
         self.ref_mode = QtWidgets.QRadioButton('Reference')
 
-        self.lastWIP = QtWidgets.QPushButton('Import last WIP scene')
-        self.publish = QtWidgets.QPushButton('Import publish scene')
+        self.lastWIP = QtWidgets.QRadioButton('Import last WIP scene')
+        self.publish = QtWidgets.QRadioButton('Import publish scene')
+        self.publish.setChecked(True)
         
         self.importInScene_btn = QtWidgets.QPushButton('Import into this scene')
         self.openInScene_btn = QtWidgets.QPushButton('Open this scene')
@@ -42,6 +44,7 @@ class ImportWidget(QtWidgets.QWidget):
         master_layout = QtWidgets.QVBoxLayout(self)
         main_layout = QtWidgets.QHBoxLayout(self)
         wipP_layout = QtWidgets.QHBoxLayout(self)
+        modes_layout = QtWidgets.QVBoxLayout(self)
         import_layout = QtWidgets.QHBoxLayout(self)
         buttons_layout = QtWidgets.QHBoxLayout(self)
         main_layout.setContentsMargins(2, 2, 2, 2)
@@ -59,9 +62,10 @@ class ImportWidget(QtWidgets.QWidget):
         wipP_layout.addWidget(self.publish)
         
         import_layout.addWidget(self.import_lbl)
-        import_layout.addWidget(self.import_mode)
-        import_layout.addWidget(self.ref_mode)
-
+        
+        modes_layout.addWidget(self.import_mode)
+        modes_layout.addWidget(self.ref_mode)
+        import_layout.addLayout(modes_layout)
         buttons_layout.addWidget(self.importInScene_btn)
         buttons_layout.addWidget(self.openInScene_btn)
         buttons_layout.addWidget(self.openInMaya_btn)
@@ -129,7 +133,7 @@ class ImportWidget(QtWidgets.QWidget):
         last_list_item = self.last_list_wdg.currentItem().text()
         
         
-        if importOrReference == 'True'
+        if importOrReference == 'True':
             wip = self.lastWIP.isChecked()
             if wip == 'True':
                 goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/WIP'
@@ -185,7 +189,7 @@ class ImportWidget(QtWidgets.QWidget):
     def openInThisScene(self):
         importOrReference = self.import_mode.isChecked()
         
-        if importOrReference == 'True'
+        if importOrReference == 'True':
             wip = self.lastWIP.isChecked()
             if wip == 'True':
                 goodPath = self.__ROOT + file_list_item + '/' + type_list_item + '/' + dep_list_item + '/' + last_list_item + '/WIP'
