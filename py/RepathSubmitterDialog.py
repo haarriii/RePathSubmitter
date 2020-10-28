@@ -37,7 +37,7 @@ class RepathSubmitterDialog(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
     def __init__(self, parent=maya_main_window()):
         super(RepathSubmitterDialog, self).__init__(parent)
-        self.setObjectName('REPATH_SUBMITTER_UI')
+        self.setObjectName('REPATH_SUBMITttTER_UI')
         self.setWindowTitle("RePath Submitter")
         self.setMinimumWidth(500)
         self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)

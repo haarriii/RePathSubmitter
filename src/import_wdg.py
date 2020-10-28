@@ -40,7 +40,9 @@ class ImportWidget(QtWidgets.QWidget):
         self.openInScene_btn = QtWidgets.QPushButton('Open this scene')
         self.openInMaya_btn = QtWidgets.QPushButton('Open in new maya scene')
 
+    
     def create_layout(self):
+        
         master_layout = QtWidgets.QVBoxLayout(self)
         main_layout = QtWidgets.QHBoxLayout(self)
         wipP_layout = QtWidgets.QHBoxLayout(self)
@@ -58,22 +60,28 @@ class ImportWidget(QtWidgets.QWidget):
         main_layout.addWidget(self.last_list_wdg)
         main_layout.addStretch()
         
+        wip_gb = QtWidgets.QGroupBox('')
+        import_gb = QtWidgets.QGroupBox('')
+
         wipP_layout.addWidget(self.lastWIP)
         wipP_layout.addWidget(self.publish)
-        
+        wip_gb.setLayout(wipP_layout)
+
         import_layout.addWidget(self.import_lbl)
         
         modes_layout.addWidget(self.import_mode)
         modes_layout.addWidget(self.ref_mode)
         import_layout.addLayout(modes_layout)
+        import_gb.setLayout(import_layout)
+
         buttons_layout.addWidget(self.importInScene_btn)
         buttons_layout.addWidget(self.openInScene_btn)
         buttons_layout.addWidget(self.openInMaya_btn)
         
         
         master_layout.addLayout(main_layout)
-        master_layout.addLayout(wipP_layout)
-        master_layout.addLayout(import_layout)
+        master_layout.addWidget(wip_gb)
+        master_layout.addLWidget(import_gb)
         master_layout.addLayout(buttons_layout)
         
 
